@@ -1,18 +1,15 @@
 import { Head, useForm } from "@inertiajs/inertia-react";
+import { Inertia } from "@inertiajs/inertia";
 import Authenticated from "@/Layouts/Authenticated/Index";
 import ValidationErrors from "@/Components/ValidationErrors";
 import Label from "@/Components/Label";
 import Input from "@/Components/Input";
 import Checkbox from "@/Components/Checkbox";
 import Button from "@/Components/Button";
-export default function Create({ auth }) {
-    const { setData, post, processing, errors } = useForm({
-        name: "",
-        category: "",
-        video_url: "",
-        thumbnail: "",
-        rating: "",
-        is_featured: "",
+
+export default function Edit({ auth, movie }) {
+    const { data, setData, processing, errors } = useForm({
+        ...movie
     });
 
     const onHandleChange = (event) => {
@@ -27,12 +24,19 @@ export default function Create({ auth }) {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route("admin.dashboard.movie.store"));
+        if (data.thumbnail === movie.thumbnail) {
+            delete data.thumbnail;
+        }
+
+        Inertia.post(route("admin.dashboard.movie.update", movie.id), {
+            _method: "PUT",
+            ...data
+        });
     };
     return (
         <Authenticated auth={auth}>
-            <Head title="Admin Create Movie" />
-            <h1 className="text-xl">Insert new Movie</h1>
+            <Head title={`Admin Edit Movie ${movie.name}`} />
+            <h1 className="text-xl">Update Movie: {movie.name}</h1>
             <hr className="mb-4" />
             <ValidationErrors errors={errors} />
             <form onSubmit={submit}>
@@ -41,6 +45,7 @@ export default function Create({ auth }) {
                     type="text"
                     name="name"
                     variant="primary-outline"
+                    defaultValue={movie.name}
                     handleChange={onHandleChange}
                     placeholder="Enter the name of movie"
                     isError={errors.name}
@@ -51,6 +56,7 @@ export default function Create({ auth }) {
                     type="text"
                     name="category"
                     variant="primary-outline"
+                    defaultValue={movie.category}
                     handleChange={onHandleChange}
                     placeholder="Enter the category of movie"
                     isError={errors.category}
@@ -65,6 +71,7 @@ export default function Create({ auth }) {
                     type="url"
                     name="video_url"
                     variant="primary-outline"
+                    defaultValue={movie.video_url}
                     handleChange={onHandleChange}
                     placeholder="Enter the video url of movie"
                     isError={errors.video_url}
@@ -75,6 +82,7 @@ export default function Create({ auth }) {
                     value="Thumbnail"
                     className="mt-4"
                 />
+                <img src={`/storage/${movie.thumbnail}`} alt="" className="w-40"/>
                 <Input
                     type="file"
                     name="thumbnail"
@@ -89,6 +97,7 @@ export default function Create({ auth }) {
                     type="number"
                     name="rating"
                     variant="primary-outline"
+                    defaultValue={movie.rating}
                     handleChange={onHandleChange}
                     placeholder="Enter the rating of movie"
                     isError={errors.rating}
@@ -105,6 +114,7 @@ export default function Create({ auth }) {
                         handleChange={(e) =>
                             setData("is_featured", e.target.checked)
                         }
+                        checked={movie.is_featured}
                     />
                 </div>
 
