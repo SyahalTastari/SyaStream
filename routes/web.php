@@ -20,7 +20,8 @@ use App\Http\Controllers\Admin\MovieController as AdminMovieController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+// MIDTRANS ROUTE
+route::post('midtrans/notification', [SubscriptionPlanController::class, 'midtransCallback']);
 
 
 
