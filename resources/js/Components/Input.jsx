@@ -3,7 +3,7 @@ import propTypes from 'prop-types';
 import '../../css/input.css';
 
 Input.propTypes = {
-    type: propTypes.oneOf(['text', 'email', 'password']),
+    type: propTypes.oneOf(['text', 'email', 'password', 'file', 'url']),
     name: propTypes.string,
     value: propTypes.oneOfType([propTypes.string, propTypes.number]),
     defaultValue: propTypes.oneOfType([propTypes.string]),
